@@ -1,0 +1,31 @@
+{
+    "author": {
+        "name": "Adam Sage"
+    },
+    "bugs": {
+        "url": "https://github.com/atsage/node-red-contrib-nr-ldapauth/issues"
+    },
+    "name"         : "node-red-contrib-nr-ldapauth",
+    "version"      : "1.0.9",
+    "description"  : "Authenticate against LDAP server",
+    "dependencies": {
+		"ldapauth-fork": "4.*"
+    },
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/atsage/node-red-contrib-nr-ldapauth.git"
+    },
+    "keywords": [ 
+		"node-red",
+		"ldap",
+		"auth",
+		"authorization"
+	],
+    "node-red"     : {
+        "nodes": {
+            "node-red-contrib-nr-ldapauth": "nr-ldapauth/nr-ldapauth.js",
+			"node-red-contrib-nr-ldapauth-cred": "nr-ldapauth/nr-ldapauth-cred.js"
+        }
+    }
+}

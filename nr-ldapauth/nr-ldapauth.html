@@ -1,0 +1,78 @@
+<script type="text/x-red" data-template-name="node-red-contrib-nr-ldapauth">
+	<div class="form-row">
+		<label for="node-input-file"><i class="fa fa-server"></i> Server</label>
+		<input type="text" id="node-input-server">
+	</div>
+	<div class="form-row">
+        <label for="node-input-filter"><i class="fa fa-filter"></i> Filter</label>
+        <input type="text" id="node-input-filter" style="width:200px; margin-right:10px;"/>
+    </div>
+	<div class="form-row">
+        <label for="node-input-searchbase"><i class="fa fa-search"></i> Search Base</label>
+        <input type="text" id="node-input-searchbase" style="width:200px; margin-right:10px;"/>
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="common.label.name"></span></label>
+        <input type="text" id="node-input-name" data-i18n="common.label.name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="node-red-contrib-nr-ldapauth">
+    <p>This node was made to authenticate POST web requests in Node-RED.  Pass 
+	<code>msg.payload.u</code> as the username and <code>msg.payload.p</code> 
+	as the password to authenticate against an LDAP server.  It will return 
+	<code>msg.auth</code> as <code>true</code> (successful) or 
+	<code>false</code> (failure) and log failed attempts 
+	to the Node-RED log with requester's IP address.  This node can be used 
+	for any authentication request but if <code>msg.req.ip</code> is not 
+	defined it will be replaced with <code>localhost</code>.</p>
+	<h3>For an Active Directory setup use:</h3>
+	<p>Server: Any domain controller.  Use FQDN if using LDAPS.<br/>
+	Bind Username: <code>cn=username,ou=Organizational Unit,DC=Domain,DC=com</code><br/>
+	Filter: <code>(SAMAccountName={{username}})</code><br/>
+	Search Base: <code>OU=Organizational Unit,DC=Domain,DC=com</code></p>
+	<h3>LDAPS Notes:</h3>
+	<p>If using LDAPS the certificate Subject Name cannot be blank.
+	By default the Windows CA certificate templates leave this blank.  
+	Node.js does not allow the Subject Name to be blank and will give the 
+	error <code>Hostname/IP doesn't match certificate's altnames: "Cert is empty"</code>
+	To set the Subject Name open the certificates template Console, right 
+	click on the template, click Properties, open the Subject Name tab,
+	and set the Subject name format to DNS name.  Also set Include this
+	information in alternate subject name to DNS.  Next export the CA
+	certificate. Run certsrv.msc, right click the domain, click 
+	Properties, on the general tab select the certificate and click
+	View Certificate, click the Details tab, click Copy to File..., 
+	then save the .crt file to the Node-RED server.  Once it's on the
+	server convert it to a .pem file using the command: <br/>
+	<code>openssl x509 -inform der -in cert.cer -out cert.pem</code><br/>
+	Test certs with this command:<br/>
+	<code>openssl s_client -connect domain.controller:636 -ca cert.pem</code>
+    </script>
+
+<script type="text/javascript">
+    var pinsInUse = {};
+    RED.nodes.registerType('node-red-contrib-nr-ldapauth',{
+        category: 'authentication',
+        color:"#E7E7AE",
+        defaults: {
+            name: { value:"" },
+            server: { value:"", type: "node-red-contrib-nr-ldapauth-cred", required: true },
+			filter: { value:"", required: true },
+			searchbase: { value:"", required: true }
+        },
+        inputs:1,
+        outputs:1,
+        icon: "lock.png",
+        label: function() {
+            var nrldapauth = RED.nodes.node(this.server);
+            return this.name || "LDAP Server: "+(nrldapauth?nrldapauth.label().split(":")[0]:this._("server.label.server"));
+        },
+        labelStyle: function() {
+            return this.name?"node_label_italic":"";
+        },
+		paletteLabel: "LDAP Auth"
+    });
+</script>
+
+
