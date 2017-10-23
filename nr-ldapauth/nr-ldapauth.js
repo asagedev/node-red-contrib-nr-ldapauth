@@ -81,7 +81,12 @@ module.exports = function(RED) {
 					ip = "localhost";
 				}
 				else{
-					ip = msg.req.ip;
+					if(msg.req.ip == "127.0.0.1" && typeof( (((msg || {}).req || {}).headers || {})["x-real-ip"] ) !== 'undefined'){ //support for NGINX proxy
+						ip = msg.req.headers["x-real-ip"];
+					}
+					else{
+						ip = msg.req.ip;
+					}
 				}
 				
 				/*If we're not connected connect again*/
