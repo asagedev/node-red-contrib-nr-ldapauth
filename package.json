@@ -6,7 +6,7 @@
         "url": "https://github.com/atsage/node-red-contrib-nr-ldapauth/issues"
     },
     "name"         : "node-red-contrib-nr-ldapauth",
-    "version"      : "1.0.9",
+    "version"      : "1.0.11",
     "description"  : "Authenticate against LDAP server",
     "dependencies": {
 		"ldapauth-fork": "4.*"
