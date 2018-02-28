@@ -60,10 +60,15 @@ module.exports = function(RED) {
 				searchFilter: filter,
 				timeout: 2000, /*Doesn't seem to do anything*/
 				idleTimeout: 30000, /*Doesn't seem to do anything*/
-				tlsOptions: {ca: [ fs.readFileSync(certificatepath) ]},
 				reconnect: false /*Doesn't seem to do anything*/
 			}
 		};
+		
+		if (certificatepath !== null && certificatepath != ""){
+			config.ldap.tlsOptions = {
+				ca: [ fs.readFileSync(certificatepath) ]
+			};
+		}
 		
 		node.ldapconnected = false;
 
@@ -103,7 +108,7 @@ module.exports = function(RED) {
 						node.warn(errstr);
 						
 						clearTimeout(node.ldaptimeout);
-						if (err != "Error: read ECONNRESET"){/*Get's lots of "Error: This socket is closed" mesages in the log if a RST is recieved when using TLS - might want to disable closing completely*/
+						if (err != "Error: read ECONNRESET"){/*Gets lots of "Error: This socket is closed" messages in the log if a RST is received when using TLS - might want to disable closing completely*/
 							node.ldap.close();
 						}
 					});
