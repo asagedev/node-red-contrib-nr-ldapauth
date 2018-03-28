@@ -86,7 +86,7 @@ module.exports = function(RED) {
                     ip = "localhost";
                 }
                 else{
-                    if((msg.req.ip == "127.0.0.1" || msg.req.ip == "172.17.0.1") && typeof( (((msg || {}).req || {}).headers || {})["x-real-ip"] ) !== 'undefined'){ //support for NGINX proxy and docker
+                    if(typeof( (((msg || {}).req || {}).headers || {})["x-real-ip"] ) !== 'undefined'){
                         ip = msg.req.headers["x-real-ip"];
                     }
                     else{
